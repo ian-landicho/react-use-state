@@ -25,9 +25,9 @@ import * as React from "react";
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
   return (
     <div>
@@ -48,9 +48,9 @@ function Counter() {
   const [count, setCount] = React.useState(0);
   const title = "My Counter"; // This never changes
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
   return (
     <div>
@@ -69,23 +69,19 @@ Every component instance maintains its own separate state.
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
-
-  const handleDecrement = () => {
-    setCount(count - 1);
-  };
+  }
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: "10px", margin: "5px" }}>
+    <div>
       <p>Count: {count}</p>
       <button onClick={handleIncrement}>+</button>
     </div>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <div>
       <Counter /> {/* Independent counter */}
@@ -103,15 +99,16 @@ When state updates, React automatically re-renders the component.
 function Counter() {
   const [count, setCount] = React.useState(0);
 
+  // This line runs on every render. Check the console.
   console.log("Counter rendered with count:", count);
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
-  const handleDecrement = () => {
+  function handleDecrement() {
     setCount(count - 1);
-  };
+  }
 
   return (
     <div>
@@ -130,16 +127,17 @@ State doesn't update immediately when you call the setter.
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const handleClick = () => {
+  function handleClick() {
+    // Check console
     console.log("Before:", count); // Shows current value
     setCount(count + 1);
     console.log("After:", count); // Still shows old value!
-  };
+  }
 
   return (
     <div>
       <p>Count: {count}</p>
-      <button onClick={handleClick}>Click me (check console)</button>
+      <button onClick={handleClick}>+</button>
     </div>
   );
 }
@@ -153,9 +151,9 @@ function Counter() {
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
   return (
     <div>
@@ -173,13 +171,13 @@ When the new state depends on the previous state, use a function:
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const increment = () => {
+  function increment() {
     setCount((prevCount) => prevCount + 1);
-  };
+  }
 
-  const addFive = () => {
+  function addFive() {
     setCount((prevCount) => prevCount + 5);
-  };
+  }
 
   return (
     <div>
@@ -201,21 +199,21 @@ function Counter() {
     lastUpdated: Date.now(),
   });
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCounterState((prev) => ({
       ...prev, // Spread the previous object
       count: prev.count + 1,
       lastUpdated: Date.now(),
     }));
-  };
+  }
 
-  const handleReset = () => {
+  function handleReset() {
     setCounterState((prev) => ({
       ...prev,
       count: 0,
       lastUpdated: Date.now(),
     }));
-  };
+  }
 
   return (
     <div>
@@ -236,33 +234,33 @@ When working with array state, always create a new array:
 ```jsx
 function Counter() {
   const [count, setCount] = React.useState(0);
-  const [history, setHistory] = React.useState([]);
+  const [history, setHistory] = React.useState<string[]>([]);
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     const newCount = count + 1;
     setCount(newCount);
 
     // Add to array - create new array with spread operator
     setHistory((prev) => [...prev, `Incremented to ${newCount}`]);
-  };
+  }
 
-  const handleDecrement = () => {
+  function handleDecrement() {
     const newCount = count - 1;
     setCount(newCount);
 
     // Add to array
     setHistory((prev) => [...prev, `Decremented to ${newCount}`]);
-  };
+  }
 
-  const handleClearHistory = () => {
+  function handleClearHistory() {
     // Replace entire array
     setHistory([]);
-  };
+  }
 
-  const handleRemoveLastAction = () => {
+  function handleRemoveLastAction() {
     // Remove last item - create new array without last element
     setHistory((prev) => prev.slice(0, -1));
-  };
+  }
 
   return (
     <div>
@@ -273,7 +271,7 @@ function Counter() {
       <button onClick={handleRemoveLastAction}>Remove Last</button>
 
       <div>
-        <h4>History:</h4>
+        <h1>History:</h1>
         <ul>
           {history.map((action, index) => (
             <li key={index}>{action}</li>
@@ -297,12 +295,12 @@ function Counter() {
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const handleTripleClick = () => {
+  function handleTripleClick() {
     setCount(count + 1); // count = 0, so this sets count to 1
     setCount(count + 1); // count is still 0, so this also sets count to 1
     setCount(count + 1); // count is still 0, so this also sets count to 1
     // Final result: count = 1 (not 3!)
-  };
+  }
 
   return (
     <div>
@@ -319,12 +317,12 @@ function Counter() {
 function Counter() {
   const [count, setCount] = React.useState(0);
 
-  const handleTripleClick = () => {
+  function handleTripleClick() {
     setCount((prev) => prev + 1); // 0 + 1 = 1
     setCount((prev) => prev + 1); // 1 + 1 = 2
     setCount((prev) => prev + 1); // 2 + 1 = 3
     // Final result: count = 3 ✅
-  };
+  }
 
   return (
     <div>
@@ -343,9 +341,9 @@ React uses **Object.is()** comparison (similar to `===`) to determine if state h
 
 ```jsx
 function Counter() {
-  const [stats, setStats] = useState({ count: 0, clicks: 0 });
+  const [stats, setStats] = React.useState({ count: 0, clicks: 0 });
 
-  const badIncrement = () => {
+  function badIncrement() {
     // ❌ Direct mutation - React won't detect the change
     stats.count = stats.count + 1;
     stats.clicks = stats.clicks + 1;
@@ -354,7 +352,7 @@ function Counter() {
     // React's internal check:
     // Object.is(oldStats, newStats) === true
     // Because stats === stats (same reference)
-  };
+  }
 
   return (
     <div>
@@ -371,9 +369,9 @@ function Counter() {
 
 ```jsx
 function Counter() {
-  const [stats, setStats] = useState({ count: 0, clicks: 0 });
+  const [stats, setStats] = React.useState({ count: 0, clicks: 0 });
 
-  const goodIncrement = () => {
+  function goodIncrement() {
     // ✅ Create new object - React detects the change
     setStats((prev) => ({
       count: prev.count + 1,
@@ -383,7 +381,7 @@ function Counter() {
     // React's internal check:
     // Object.is(oldStats, newStats) === false
     // Because we created a new object reference
-  };
+  }
 
   return (
     <div>
@@ -408,19 +406,22 @@ function calculateInitialCount() {
   console.log("Expensive calculation running...");
   // Simulate slow computation (like processing large data, API calls, etc.)
   let result = 0;
-  for (let i = 0; i < 10000000; i++) {
+
+  const now = performance.now();
+  while (performance.now() - now < 500) {
     result += Math.random();
   }
+
   return Math.floor(result / 10000000);
 }
 
 function Counter() {
   // ❌ WRONG: Expensive calculation runs on every render!
-  const [count, setCount] = useState(calculateInitialCount());
+  const [count, setCount] = React.useState(calculateInitialCount());
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
   return (
     <div>
@@ -439,19 +440,22 @@ function calculateInitialCount() {
   console.log("Expensive calculation running...");
   // Simulate slow computation (like processing large data, API calls, etc.)
   let result = 0;
-  for (let i = 0; i < 10000000; i++) {
+
+  const now = performance.now();
+  while (performance.now() - now < 500) {
     result += Math.random();
   }
+
   return Math.floor(result / 10000000);
 }
 
 function Counter() {
   // ✅ CORRECT: Expensive calculation only runs once during initialization
-  const [count, setCount] = useState(() => calculateInitialCount());
+  const [count, setCount] = React.useState(() => calculateInitialCount());
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
   return (
     <div>
@@ -484,9 +488,9 @@ function Counter() {
   const [count, setCount] = React.useState(0);
 
   // ✅ Update state in event handler
-  const handleClick = () => {
+  function handleClick() {
     setCount(count + 1);
-  };
+  }
 
   return (
     <div>
@@ -509,11 +513,11 @@ function Counter() {
   const [count, setCount] = React.useState(0);
   const [doubledCount, setDoubledCount] = React.useState(0);
 
-  const increment = () => {
+  function increment() {
     const newCount = count + 1;
     setCount(newCount);
     setDoubledCount(newCount * 2); // Extra unnecessary state!
-  };
+  }
 
   return (
     <div>
@@ -523,7 +527,9 @@ function Counter() {
     </div>
   );
 }
+```
 
+```jsx
 // ✅ Compute derived values directly
 function Counter() {
   const [count, setCount] = React.useState(0);
@@ -541,33 +547,210 @@ function Counter() {
 
 ### 2. **Complex State Logic** - Consider useReducer instead
 
+When you have multiple pieces of state that are interdependent, `useState` becomes difficult to manage:
+
 ```jsx
 // ❌ useState becomes unwieldy with complex interactions
 function Counter() {
   const [count, setCount] = React.useState(0);
-  const [step, setStep] = useState(1);
-  const [isRunning, setIsRunning] = useState(false);
-  const [history, setHistory] = useState([]);
+  const [step, setStep] = React.useState(1);
+  const [isRunning, setIsRunning] = React.useState(false);
+  const [history, setHistory] = React.useState<string[]>([]);
 
-  // Many complex interactions between these states...
-  const increment = () => {
-    setCount(count + step);
-    setHistory([...history, count + step]);
-  };
-}
+  // Complex interactions between these states...
+  function increment() {
+    const newCount = count + step;
+    setCount(newCount);
+    setHistory((prev) => [...prev, `Incremented by ${step} to ${newCount}`]);
+  }
 
-// ✅ Better with useReducer for complex state logic
-function Counter() {
-  const [state, dispatch] = useReducer(counterReducer, initialState);
+  function decrement() {
+    const newCount = count - step;
+    setCount(newCount);
+    setHistory((prev) => [...prev, `Decremented by ${step} to ${newCount}`]);
+  }
+
+  function reset() {
+    setCount(0);
+    setStep(1);
+    setIsRunning(false);
+    setHistory((prev) => [...prev, "Reset all values"]);
+  }
+
+  function toggleRunning() {
+    const newRunning = !isRunning;
+    setIsRunning(newRunning);
+    setHistory((prev) => [...prev, newRunning ? "Started" : "Stopped"]);
+  }
+
+  function changeStep(newStep: React.SetStateAction<number>) {
+    setStep(newStep);
+    setHistory((prev) => [...prev, `Changed step to ${newStep}`]);
+  }
 
   return (
     <div>
-      <p>Count: {state.count}</p>
-      <button onClick={() => dispatch({ type: "increment" })}>+</button>
+      <p>Count: {count}</p>
+      <p>Step: {step}</p>
+      <p>Status: {isRunning ? "Running" : "Stopped"}</p>
+      <button onClick={increment}>+{step}</button>
+      <button onClick={decrement}>-{step}</button>
+      <button onClick={reset}>Reset</button>
+      <button onClick={toggleRunning}>{isRunning ? "Stop" : "Start"}</button>
+      <input
+        type="number"
+        value={step}
+        onChange={(e) => changeStep(Number(e.target.value))}
+      />
+      <div>
+        <h4>History:</h4>
+        <ul>
+          {history.map((action, index) => (
+            <li key={index}>{action}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
 ```
+
+**Problems with the useState approach:**
+
+- **Scattered Logic**: State updates are spread across multiple functions
+- **State Synchronization**: Easy to forget updating related state (like history)
+- **Complex Dependencies**: Multiple pieces of state depend on each other
+
+```jsx
+// ✅ Better with useReducer for complex state logic
+type CounterAction =
+  | { type: "INCREMENT" | "DECREMENT" | "RESET" | "TOGGLE_RUNNING" }
+  | { type: "CHANGE_STEP"; payload: number }; // payload is required for CHANGE_STEP
+
+type InitialState = {
+  count: number;
+  step: number;
+  isRunning: boolean;
+  history: string[];
+};
+
+const initialState: InitialState = {
+  count: 0,
+  step: 1,
+  isRunning: false,
+  history: [],
+};
+
+function counterReducer(state: InitialState, action: CounterAction) {
+  switch (action.type) {
+    case "INCREMENT": {
+      const newCount = state.count + state.step;
+      return {
+        ...state,
+        count: newCount,
+        history: [
+          ...state.history,
+          `Incremented by ${state.step} to ${newCount}`,
+        ],
+      };
+    }
+
+    case "DECREMENT": {
+      const newCount = state.count - state.step;
+      return {
+        ...state,
+        count: newCount,
+        history: [
+          ...state.history,
+          `Decremented by ${state.step} to ${newCount}`,
+        ],
+      };
+    }
+
+    case "RESET":
+      return {
+        ...initialState,
+        history: [...state.history, "Reset all values"],
+      };
+
+    case "TOGGLE_RUNNING": {
+      const newRunning = !state.isRunning;
+      return {
+        ...state,
+        isRunning: newRunning,
+        history: [...state.history, newRunning ? "Started" : "Stopped"],
+      };
+    }
+
+    case "CHANGE_STEP":
+      return {
+        ...state,
+        step: action.payload,
+        history: [...state.history, `Changed step to ${action.payload}`],
+      };
+
+    default:
+      return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = React.useReducer(counterReducer, initialState);
+
+  function increment() {
+    dispatch({ type: "INCREMENT" });
+  }
+
+  function decrement() {
+    dispatch({ type: "DECREMENT" });
+  }
+
+  function reset() {
+    dispatch({ type: "RESET" });
+  }
+
+  function toggleRunning() {
+    dispatch({ type: "TOGGLE_RUNNING" });
+  }
+
+  function changeStep(newStep: number) {
+    dispatch({ type: "CHANGE_STEP", payload: newStep });
+  }
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      <p>Step: {state.step}</p>
+      <p>Status: {state.isRunning ? "Running" : "Stopped"}</p>
+      <button onClick={increment}>+{state.step}</button>
+      <button onClick={decrement}>-{state.step}</button>
+      <button onClick={reset}>Reset</button>
+      <button onClick={toggleRunning}>
+        {state.isRunning ? "Stop" : "Start"}
+      </button>
+      <input
+        type="number"
+        value={state.step}
+        onChange={(e) => changeStep(Number(e.target.value))}
+      />
+      <div>
+        <h4>History:</h4>
+        <ul>
+          {state.history.map((action: string, index: number) => (
+            <li key={index}>{action}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+```
+
+**Benefits of the useReducer approach:**
+
+- **Centralized Logic**: All state transitions are in one place
+- **Consistent Updates**: History is always updated correctly when state changes
+- **Predictable**: Easy to understand what each action does
 
 ---
 
@@ -582,13 +765,13 @@ function Counter() {
   const [isRunning, setIsRunning] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const handleIncrement = () => {
+  function handleIncrement() {
     setCount(count + 1);
-  };
+  }
 
-  const handleToggleRunning = () => {
+  function handleToggleRunning() {
     setIsRunning(!isRunning);
-  };
+  }
 
   return (
     <div>
@@ -604,51 +787,146 @@ function Counter() {
 
 ### 2. **Separate Independent State**
 
+When state pieces are truly independent (don't depend on each other), separate them instead of grouping them into one object:
+
 ```jsx
-// ❌ Large state object
+// ❌ Grouping independent state in one object
 function Counter() {
-  const [state, setState] = useState({
+  const [state, setState] = React.useState({
     count: 0,
-    step: 1,
-    isRunning: false,
-    error: null,
+    theme: "light",
+    userName: "",
+    showHistory: false,
+    notifications: 0,
   });
 
   // Hard to update individual pieces - you need the spread operator every time
-  const handleIncrement = () => {
-    setState((prev) => ({ ...prev, count: prev.count + prev.step }));
-  };
+  function handleIncrement() {
+    setState((prev) => ({ ...prev, count: prev.count + 1 }));
+  }
 
-  const handleToggleRunning = () => {
-    setState((prev) => ({ ...prev, isRunning: !prev.isRunning }));
-  };
+  function handleThemeToggle() {
+    setState((prev) => ({
+      ...prev,
+      theme: prev.theme === "light" ? "dark" : "light",
+    }));
+  }
 
-  const handleStepChange = (newStep) => {
-    setState((prev) => ({ ...prev, step: newStep }));
-  };
-}
+  function handleNameChange(name) {
+    setState((prev) => ({ ...prev, userName: name }));
+  }
 
-// ✅ Separate independent state
-function Counter() {
-  const [count, setCount] = React.useState(0);
-  const [step, setStep] = useState(1);
-  const [isRunning, setIsRunning] = useState(false);
-  const [error, setError] = useState(null);
+  function handleToggleHistory() {
+    setState((prev) => ({ ...prev, showHistory: !prev.showHistory }));
+  }
 
-  // Easy to update each piece independently - direct updates
-  const handleIncrement = () => {
-    setCount(count + step);
-  };
+  function handleAddNotification() {
+    setState((prev) => ({ ...prev, notifications: prev.notifications + 1 }));
+  }
 
-  const handleToggleRunning = () => {
-    setIsRunning(!isRunning);
-  };
+  function handleClearNotifications() {
+    setState((prev) => ({ ...prev, notifications: 0 }));
+  }
 
-  const handleStepChange = (newStep) => {
-    setStep(newStep);
-  };
+  return (
+    <div className={state.theme === "dark" ? "dark-theme" : "light-theme"}>
+      <h1>Welcome, {state.userName || "Guest"}!</h1>
+      <p>Count: {state.count}</p>
+      <p>Notifications: {state.notifications}</p>
+
+      <button onClick={handleIncrement}>+1</button>
+      <button onClick={handleThemeToggle}>
+        Switch to {state.theme === "light" ? "Dark" : "Light"} Theme
+      </button>
+      <button onClick={handleToggleHistory}>
+        {state.showHistory ? "Hide" : "Show"} History
+      </button>
+      <button onClick={handleAddNotification}>Add Notification</button>
+      <button onClick={handleClearNotifications}>Clear Notifications</button>
+
+      <input
+        type="text"
+        placeholder="Enter your name"
+        value={state.userName}
+        onChange={(e) => handleNameChange(e.target.value)}
+      />
+
+      {state.showHistory && <div>History panel would be here...</div>}
+    </div>
+  );
 }
 ```
+
+```jsx
+// ✅ Separate independent state pieces
+function Counter() {
+  const [count, setCount] = React.useState(0);
+  const [theme, setTheme] = React.useState("light");
+  const [userName, setUserName] = React.useState("");
+  const [showHistory, setShowHistory] = React.useState(false);
+  const [notifications, setNotifications] = React.useState(0);
+
+  // Easy to update each piece independently - direct updates
+  function handleIncrement() {
+    setCount(count + 1);
+  }
+
+  function handleThemeToggle() {
+    setTheme(theme === "light" ? "dark" : "light");
+  }
+
+  function handleNameChange(name) {
+    setUserName(name);
+  }
+
+  function handleToggleHistory() {
+    setShowHistory(!showHistory);
+  }
+
+  function handleAddNotification() {
+    setNotifications(notifications + 1);
+  }
+
+  function handleClearNotifications() {
+    setNotifications(0);
+  }
+
+  return (
+    <div className={theme === "dark" ? "dark-theme" : "light-theme"}>
+      <h1>Welcome, {userName || "Guest"}!</h1>
+      <p>Count: {count}</p>
+      <p>Notifications: {notifications}</p>
+
+      <button onClick={handleIncrement}>+1</button>
+      <button onClick={handleThemeToggle}>
+        Switch to {theme === "light" ? "Dark" : "Light"} Theme
+      </button>
+      <button onClick={handleToggleHistory}>
+        {showHistory ? "Hide" : "Show"} History
+      </button>
+      <button onClick={handleAddNotification}>Add Notification</button>
+      <button onClick={handleClearNotifications}>Clear Notifications</button>
+
+      <input
+        type="text"
+        placeholder="Enter your name"
+        value={userName}
+        onChange={(e) => handleNameChange(e.target.value)}
+      />
+
+      {showHistory && <div>History panel would be here...</div>}
+    </div>
+  );
+}
+```
+
+**Benefits of separating independent state:**
+
+- **Simpler Updates**: No need for spread operator on every update
+- **Better Performance**: React can optimize re-renders for individual state changes
+- **Clearer Intent**: Each state piece has a clear, single responsibility
+- **Easier Testing**: You can test each state piece independently
+- **Less Error-Prone**: No risk of accidentally overwriting other state properties
 
 ### 3. **Use Functional Updates**
 
@@ -657,17 +935,17 @@ function Counter() {
   const [count, setCount] = React.useState(0);
 
   // ✅ When new state depends on previous state
-  const increment = () => {
+  function increment() {
     setCount((prevCount) => prevCount + 1);
-  };
+  }
 
-  const incrementByStep = (step) => {
+  function incrementByStep(step) {
     setCount((prevCount) => prevCount + step);
-  };
+  }
 
-  const handleAddFive = () => {
+  function handleAddFive() {
     incrementByStep(5);
-  };
+  }
 
   return (
     <div>

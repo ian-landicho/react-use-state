@@ -1,15 +1,19 @@
 import * as React from "react";
 import "./app.css";
 
-function App() {
+function Counter() {
   const [count, setCount] = React.useState(0);
 
+  function handleIncrement() {
+    setCount(count + 1);
+  }
+
   return (
-    <div className="card">
-      <h2>Current count: {count}</h2>
-      <button onClick={() => setCount((count) => count + 1)}>Increment</button>
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={handleIncrement}>+</button>
     </div>
   );
 }
 
-export default App;
+export default Counter;
